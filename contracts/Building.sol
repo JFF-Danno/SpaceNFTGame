@@ -5,8 +5,8 @@ import "@rari-capital/solmate/src/tokens/ERC20.sol";
 
 contract Building {
 
-  enum BuildingType{ Metal_Mine, Crystal_Mine, Deuterium_Synthesizer }
-   BuildingType public buildingType = BuildingType.Metal_Mine;
+  enum BuildingType{ METALMINE, CRYSTALMINE, DEUTEREUMSYNTHESIZOR }
+   BuildingType public buildingType = BuildingType.METALMINE;
    
   struct PlayerBuilding {
     address playerAddress;
@@ -27,7 +27,7 @@ contract Building {
   function init() external {
   //  LevelInfo[] memory lia  = new LevelInfo[](1);
  //   lia[0] = LevelInfo( 100, 100, 0, 1 );
-  //  resourcesLevelInfo[BuildingType.Metal_Mine] = lia;
+  //  resourcesLevelInfo[BuildingType.METALMINE] = lia;
   }
   
   constructor() {
@@ -49,7 +49,7 @@ contract MetalERC20 is ERC20 {
   mapping(address =>uint) lastUpdate;
 
   function updateBalance(address userAddress) internal {
- //  uint rate = building.resourcesLevelInfo(building.buildingType.Metal_Mine)[0].productionRate;
+   uint rate = building.resourcesLevelInfo(building.buildingType.METALMINE)[0].productionRate;
  //  balanceMetal[userAddress] += ( block.timestamp - lastUpdate[userAddress] ) * rate;
    lastUpdate[userAddress] = block.timestamp;
   }
