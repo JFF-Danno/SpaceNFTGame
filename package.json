@@ -1,0 +1,31 @@
+{
+  "name": "spacenftgame",
+  "version": "1.0.0",
+  "description": "SpaceNFTGame",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JFF-Danno/SpaceNFTGame.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JFF-Danno/SpaceNFTGame/issues"
+  },
+  "homepage": "https://github.com/JFF-Danno/SpaceNFTGame#readme",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.4",
+    "hardhat": "^2.9.1"
+  },
+  "dependencies": {
+    "@rari-capital/solmate": "^6.2.0"
+  }
+}
