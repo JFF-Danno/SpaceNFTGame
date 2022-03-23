@@ -48,9 +48,12 @@ contract Building {
      linfo[1] = LevelInfo({costMetal:200, costCrystal:200, costDeutereum:0, productionRate:2} );
      resourcesLevelInfo[BuildingType.METALMINE] = linfo;   
      MetalERC20 merc = new MetalERC20("Metal","Metal", 18, address(this));
-  
+     PlayerBuilding memory building =  PlayerBuilding({
+         playerAddress:userAddress,
+         buildingType:BuildingType.METALMINE,
+         level:0});
      //PlayerBuilding building = PlayerBuilding({playerAddress:userAddress,BuildingType:BuildingType.METALMINE,level:0});
-     PlayerBuilding memory building =  PlayerBuilding({playerAddress:userAddress,BuildingType:BuildingType.METALMINE,level:0});
+     
  //    PlayerBuilding[3] memory pbs = [building,building,building];
   //   buildings[userAddress] = [PlayerBuilding({BuildingType:BuildingType.METALMINE,level:0})];
      //add to erc20 mappings, balance and lastUpdate
