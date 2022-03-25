@@ -5,82 +5,104 @@ import "@rari-capital/solmate/src/tokens/ERC20.sol";
 import "hardhat/console.sol";
 
 contract Building {
+    enum BuildingType {
+        METALMINE,
+        CRYSTALMINE,
+        DEUTEREUMSYNTHESIZOR
+    }
+    BuildingType public buildingType;
 
-  enum  BuildingType{ METALMINE, CRYSTALMINE, DEUTEREUMSYNTHESIZOR }
-   BuildingType public buildingType;
-   
-  struct PlayerBuilding {
-    address playerAddress;
-    BuildingType buildingType;
-    uint level;
-  } 
-  
-  struct LevelInfo {
-    uint256 costMetal;
-    uint256 costCrystal;
-    uint256 costDeutereum;
-    uint256 productionRate;
-  }
-  
-  mapping( string => uint256 ) public levels;
-  mapping( address => PlayerBuilding[] ) public buildings;
-  mapping( BuildingType => LevelInfo[] ) public resourcesLevelInfo;
+    struct PlayerBuilding {
+        address playerAddress;
+        BuildingType buildingType;
+        uint256 level;
+    }
 
-  
-  function getProductionRate(address user, BuildingType _buildingType) public view returns (uint) {
-    return resourcesLevelInfo[_buildingType][getBuilding(user,_buildingType).level].productionRate;
-  }
-  
-  function getBuilding(address user,BuildingType _buildingType) public view returns (PlayerBuilding memory) {
-    for( uint i = 0; i < buildings[user].length; i++ ) {
-      if ( buildings[user][i].buildingType == _buildingType ) {
-        return buildings[user][i];
-      }
-    }  
-  }
+    struct LevelInfo {
+        uint256 costMetal;
+        uint256 costCrystal;
+        uint256 costDeutereum;
+        uint256 productionRate;
+    }
 
-  LevelInfo[2] public linfo;
-  PlayerBuilding building1 ;
-  
-  function init(address userAddress) external {
+    mapping(string => uint256) public levels;
+    mapping(address => PlayerBuilding[]) public buildings;
+    mapping(BuildingType => LevelInfo[]) public resourcesLevelInfo;
 
-     linfo[0] = LevelInfo({costMetal:100, costCrystal:100, costDeutereum:0, productionRate:1} );
-     linfo[1] = LevelInfo({costMetal:200, costCrystal:200, costDeutereum:0, productionRate:2} );
-     resourcesLevelInfo[BuildingType.METALMINE] = linfo;   
-     MetalERC20 merc = new MetalERC20("Metal","Metal", 18, address(this));
-     PlayerBuilding memory building =  PlayerBuilding({
-         playerAddress:userAddress,
-         buildingType:BuildingType.METALMINE,
-         level:0});
-     //PlayerBuilding building = PlayerBuilding({playerAddress:userAddress,BuildingType:BuildingType.METALMINE,level:0});
-     
- //    PlayerBuilding[3] memory pbs = [building,building,building];
-  //   buildings[userAddress] = [PlayerBuilding({BuildingType:BuildingType.METALMINE,level:0})];
-     //add to erc20 mappings, balance and lastUpdate
+    function getProductionRate(address user, BuildingType _buildingType)
+        public
+        view
+        returns (uint256)
+    {
+        return
+            resourcesLevelInfo[_buildingType][getBuilding(user, _buildingType).level]
+                .productionRate;
+    }
 
-  }
-  
-  constructor() {
- 
-  }
-  
+    function getBuilding(address user, BuildingType _buildingType)
+        public
+        view
+        returns (PlayerBuilding memory)
+    {
+        for (uint256 i = 0; i < buildings[user].length; i++) {
+            if (buildings[user][i].buildingType == _buildingType) {
+                return buildings[user][i];
+            }
+        }
+    }
+
+    LevelInfo[2] public linfo;
+    PlayerBuilding building1;
+
+    function init(address userAddress) external {
+        linfo[0] = LevelInfo({
+            costMetal: 100,
+            costCrystal: 100,
+            costDeutereum: 0,
+            productionRate: 1
+        });
+        linfo[1] = LevelInfo({
+            costMetal: 200,
+            costCrystal: 200,
+            costDeutereum: 0,
+            productionRate: 2
+        });
+        resourcesLevelInfo[BuildingType.METALMINE] = linfo;
+        MetalERC20 merc = new MetalERC20("Metal", "Metal", 18, address(this));
+        PlayerBuilding memory building = PlayerBuilding({
+            playerAddress: userAddress,
+            buildingType: BuildingType.METALMINE,
+            level: 0
+        });
+        //PlayerBuilding building = PlayerBuilding({playerAddress:userAddress,BuildingType:BuildingType.METALMINE,level:0});
+
+        //    PlayerBuilding[3] memory pbs = [building,building,building];
+        //   buildings[userAddress] = [PlayerBuilding({BuildingType:BuildingType.METALMINE,level:0})];
+        //add to erc20 mappings, balance and lastUpdate
+    }
+
+    constructor() {}
 }
 
 contract MetalERC20 is ERC20 {
- 
-  Building building;
+    Building building;
 
-  constructor(string memory name, string memory symbol, uint8 decimals, address _BuildingContractAddress ) ERC20(name, symbol, decimals) {
-    _mint(msg.sender, decimals);
-    building = Building(_BuildingContractAddress);
-  }
-  
-  mapping(address =>uint) balanceMetal;
-  mapping(address =>uint) lastUpdate;
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint8 decimals,
+        address _BuildingContractAddress
+    ) ERC20(name, symbol, decimals) {
+        _mint(msg.sender, decimals);
+        building = Building(_BuildingContractAddress);
+    }
 
-  function updateBalance(address userAddress) internal {
-   uint rate =  building.getProductionRate(userAddress,Building.BuildingType.METALMINE);  
-   balanceMetal[userAddress] += ( block.timestamp - lastUpdate[userAddress] ) * rate;
-   lastUpdate[userAddress] = block.timestamp;
-  }
+    mapping(address => uint256) balanceMetal;
+    mapping(address => uint256) lastUpdate;
+
+    function updateBalance(address userAddress) internal {
+        uint256 rate = building.getProductionRate(userAddress, Building.BuildingType.METALMINE);
+        balanceMetal[userAddress] += (block.timestamp - lastUpdate[userAddress]) * rate;
+        lastUpdate[userAddress] = block.timestamp;
+    }
 }
