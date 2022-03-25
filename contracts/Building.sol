@@ -34,21 +34,8 @@ contract Building {
         view
         returns (uint256)
     {
-        return
-            resourcesLevelInfo[_buildingType][getBuilding(user, _buildingType).level]
-                .productionRate;
-    }
-
-    function getBuilding(address user, BuildingType _buildingType)
-        public
-        view
-        returns (PlayerBuilding memory)
-    {
-        for (uint256 i = 0; i < buildings[user].length; i++) {
-            if (buildings[user][i].buildingType == _buildingType) {
-                return buildings[user][i];
-            }
-        }
+        PlayerBuilding memory building = buildings[user][uint(_buildingType)];
+        return resourcesLevelInfo[_buildingType][building.level].productionRate;
     }
 
     LevelInfo[2] public linfo;
